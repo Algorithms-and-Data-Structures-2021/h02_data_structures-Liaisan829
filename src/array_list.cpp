@@ -58,8 +58,10 @@ namespace itis {
         internal::check_out_of_range(index, 0, size_);
 
         Element e = data_[index];
-        std::copy(data_ + size_, data_ + index, data_ + index - 1);
-        data_[size_ - 1] = Element::UNINITIALIZED;
+        for (int i = index; i < size_; ++i) {
+            data_[i] = data_[i+1];
+        }
+        data_[size_] = Element::UNINITIALIZED;
         size_--;
         return e;
     }

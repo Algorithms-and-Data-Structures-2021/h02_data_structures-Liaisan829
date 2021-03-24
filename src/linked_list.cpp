@@ -29,27 +29,24 @@ namespace itis {
         if (size_ == 0) {
             head_ = node;
             tail_ = node;
-            size_++;
         }
         //        (2) добавляем в начало списка,
         if (index == 0) {
+            node->next = head_;
             head_ = node;
-            size_++;
         }
 
         //        (3) добавляем в конец списка
         if (index == size_) {
             tail_->next = node;
             tail_ = node;
-            size_++;
         }
         //        (4) все остальное
         if (index > 0 && index < size_) {
             node->next = find_node(index);
             find_node(index-1) -> next = node;
-            size_++;
-
         }
+        size_++;
     }
 
     void LinkedList::Set(int index, Element e) {
@@ -89,6 +86,7 @@ namespace itis {
             curr_node = curr_node->next;
             delete delete_node;
         }
+
         head_ = nullptr;
         tail_ = nullptr;
         size_ = 0;
