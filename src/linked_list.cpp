@@ -15,7 +15,6 @@ namespace itis {
         } else {
             tail_->next = node;
             tail_ = node;
-            tail_->next = nullptr;
         }
         size_++;
     }
@@ -34,23 +33,23 @@ namespace itis {
         }
         //        (2) добавляем в начало списка,
         if (index == 0) {
-
+            head_ = node;
+            size_++;
         }
 
         //        (3) добавляем в конец списка
         if (index == size_) {
             tail_->next = node;
             tail_ = node;
-            tail_->next = nullptr;
             size_++;
         }
         //        (4) все остальное
         if (index > 0 && index < size_) {
+            node->next = find_node(index);
+            find_node(index-1) -> next = node;
+            size_++;
 
         }
-
-        // напишите свой код здесь ...
-
     }
 
     void LinkedList::Set(int index, Element e) {
@@ -64,16 +63,23 @@ namespace itis {
     Element LinkedList::Remove(int index) {
         internal::check_out_of_range(index, 0, size_);
         // Tip 1: рассмотрите случай, когда удаляется элемент в начале списка
-        if(index == 0){
-            Node* delete_node = head_;
+        Element data;
+        if (index == 0) {
+            Node *delete_node = head_;
             head_ = head_->next;
+            data = delete_node->data;
+            delete delete_node;
+            size_--;
+        } else {
+
+            Node *node = find_node(index - 1);
+            Node *delete_node = node->next;
+            node->next = delete_node->next;
+            data = delete_node->data;
             delete delete_node;
             size_--;
         }
-
-        // Tip 2: используйте функцию find_node(index) отличается на -1
-        // напишите свой код здесь ... delete нужно бы вроде чтоб не было утечки памяти
-        return {};
+        return data;
     }
 
     void LinkedList::Clear() {
@@ -90,16 +96,8 @@ namespace itis {
 
     Element LinkedList::Get(int index) const {
         internal::check_out_of_range(index, 0, size_);
-        if (index == 0) return head_->data;
-
-        if (index == size_ - 1) return tail_->data;
-
-        int count = 0;
-        for (Node *node = head_; node != nullptr; node = node->next) {
-            if (count == index) return node->data;
-            count++;
-        }
-        return {};
+        Node* node = find_node(index);
+        return node->data;
     }
 
     int LinkedList::IndexOf(Element e) const {
